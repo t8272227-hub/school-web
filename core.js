@@ -20,7 +20,18 @@
 
   var state = Kid.state = Object.assign(S.emptySnap(), load('kid.state', {}));
   state.mistakes = state.mistakes || {}; state.notes = state.notes || {}; state.profile = state.profile || {}; state.usage = state.usage || {}; state.alerts = state.alerts || {}; state.accounts = state.accounts || {}; state.days = state.days || [];
-  var settings = Kid.settings = Object.assign({ repo: '', token: '', aiKey: '', aiBase: 'https://api.zveno.ai/v1', model: 'anthropic/claude-sonnet-5' }, load('kid.settings', {}));
+  var settings = Kid.settings = Object.assign({ repo: 't8272227-hub/kid-sync', token: '', aiKey: '', aiBase: 'https://api.zveno.ai/v1', model: 'anthropic/claude-sonnet-5' }, load('kid.settings', {}));
+  // Ссылка подключения: https://сайт/#sync=владелец/репозиторий|токен. Хвост после # не уходит на сервер и в код сайта не попадает;
+  // значения сохраняются только в этом браузере, а адрес сразу очищается.
+  (function () {
+    try {
+      var m = /[#&]sync=([^&|]+)\|([^&]+)/.exec(decodeURIComponent(location.hash || ''));
+      if (m) {
+        settings.repo = m[1].trim(); settings.token = m[2].trim(); save('kid.settings', settings);
+        history.replaceState(null, '', location.pathname + location.search);
+      }
+    } catch (e) { /* без ссылки подключения */ }
+  })();
   Kid.persist = function () { save('kid.state', state); };
   Kid.persistSettings = function () { save('kid.settings', settings); };
 
