@@ -3,7 +3,6 @@ name: Web version (GitHub Pages)
 on:
   push:
     branches: [main, master]
-    paths: [" .*", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -26,6 +25,6 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: web
+          path: .
       - id: deployment
         uses: actions/deploy-pages@v4
